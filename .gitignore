@@ -1,0 +1,4 @@
+_build
+apps/*/ebin
+build/core.plt
+erl_crash.dump

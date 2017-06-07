@@ -1,0 +1,7 @@
+{application, veon_helper, [
+    {description, "Veon test task application helpers"},
+    {vsn, "1"},
+    {registered, []},
+    {applications, [kernel, stdlib]},
+    {env, []}
+]}.
