@@ -9,12 +9,13 @@
 -type imdb_id() :: binary().
 -type movie_title() :: binary().
 -type screen_id() :: binary().
+-type reservation_id() :: binary().
 -type seats_count() :: non_neg_integer().
 -type available_seats() :: seats_count().
 -type reserved_seats() :: seats_count().
 
 -export_type([
-    imdb_id/0, movie_title/0, screen_id/0,
+    imdb_id/0, movie_title/0, reservation_id/0, screen_id/0,
     seats_count/0, available_seats/0, reserved_seats/0
 ]).
 
@@ -39,7 +40,7 @@
     ).
 
 
-%% Interface 
+%% Interface
 
 
 -spec parse_json(Json :: binary()) ->
@@ -49,10 +50,10 @@
     ).
 
 parse_json(Json) ->
-    try jiffy:decode(Json) of 
+    try jiffy:decode(Json) of
         Document ->
             {ok, Document}
-    catch 
+    catch
         throw:E ->
             {error, E}
     end.
@@ -65,10 +66,10 @@ parse_json(Json) ->
     ).
 
 render_json(Document) ->
-    try jiffy:decode(Document) of 
+    try jiffy:encode(Document) of
         Json ->
             {ok, Json}
-    catch 
+    catch
         throw:E ->
             {error, E}
     end.
