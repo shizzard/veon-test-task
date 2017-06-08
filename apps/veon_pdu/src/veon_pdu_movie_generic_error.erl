@@ -1,15 +1,16 @@
--module(veon_pdu_movie_reserve_req).
+-module(veon_pdu_movie_generic_error).
 -behavior(veon_pdu).
 
 -export([
-    new/2, imdb_id/1, screen_id/1,
-    imdb_id/2, screen_id/2,
+    new/3, status/1, code/1, slogan/1,
+    status/2, code/2, slogan/2,
     from_document/1, to_document/1, validate/1
 ]).
 
 -record(?MODULE, {
-    imdb_id :: veon_pdu:imdb_id(),
-    screen_id :: veon_pdu:screen_id()
+    status :: veon_pdu:meta_status(),
+    code :: veon_pdu:meta_code(),
+    slogan :: veon_pdu:meta_slogan()
 }).
 -type pdu() :: #?MODULE{}.
 -export_type([pdu/0]).
@@ -21,43 +22,60 @@
 
 
 -spec new(
-    ImbdId :: veon_pdu:imdb_id(),
-    ScreenId :: veon_pdu:screen_id()
+    Status :: veon_pdu:meta_status(),
+    Code :: veon_pdu:meta_code(),
+    Slogan :: veon_pdu:meta_slogan()
 ) ->
     pdu().
 
-new(ImbdId, ScreenId) ->
+new(Status, Code, Slogan) ->
     #?MODULE{
-        imdb_id = ImbdId, screen_id = ScreenId
+        status = Status,
+        code = Code,
+        slogan = Slogan
     }.
 
 
--spec imdb_id(Record :: pdu()) ->
-    Ret :: veon_pdu:imdb_id().
+-spec status(Record :: pdu()) ->
+    Ret :: veon_pdu:status().
 
-imdb_id(#?MODULE{imdb_id = ImdbId}) ->
-    ImdbId.
+status(#?MODULE{status = Status}) ->
+    Status.
 
 
--spec imdb_id(Record :: pdu(), Value :: veon_pdu:imdb_id()) ->
+-spec status(Record :: pdu(), Value :: veon_pdu:status()) ->
     Ret :: pdu().
 
-imdb_id(#?MODULE{} = Record, Value) ->
-    Record#?MODULE{imdb_id = Value}.
+status(#?MODULE{} = Record, Value) ->
+    Record#?MODULE{status = Value}.
 
 
--spec screen_id(Record :: pdu()) ->
-    Ret :: veon_pdu:screen_id().
+-spec code(Record :: pdu()) ->
+    Ret :: veon_pdu:code().
 
-screen_id(#?MODULE{screen_id = ScreenId}) ->
-    ScreenId.
+code(#?MODULE{code = Code}) ->
+    Code.
 
 
--spec screen_id(Record :: pdu(), Value :: veon_pdu:screen_id()) ->
+-spec code(Record :: pdu(), Value :: veon_pdu:code()) ->
     Ret :: pdu().
 
-screen_id(#?MODULE{} = Record, Value) ->
-    Record#?MODULE{screen_id = Value}.
+code(#?MODULE{} = Record, Value) ->
+    Record#?MODULE{code = Value}.
+
+
+-spec slogan(Record :: pdu()) ->
+    Ret :: veon_pdu:slogan().
+
+slogan(#?MODULE{slogan = Slogan}) ->
+    Slogan.
+
+
+-spec slogan(Record :: pdu(), Value :: veon_pdu:slogan()) ->
+    Ret :: pdu().
+
+slogan(#?MODULE{} = Record, Value) ->
+    Record#?MODULE{slogan = Value}.
 
 
 -spec validate(Document :: jiffy_v:jv_data()) ->
@@ -82,8 +100,9 @@ validate(Document) ->
 
 from_document(Document) ->
     {ok, new(
-        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_imdb_id], Document)),
-        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_screen_id], Document))
+        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_meta, ?datafield_status], Document)),
+        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_meta, ?datafield_code], Document)),
+        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_meta, ?datafield_slogan], Document))
     )}.
 
 
@@ -94,8 +113,11 @@ from_document(Document) ->
 
 to_document(Record) ->
     {ok, {[
-        {?datafield_imdb_id, imdb_id(Record)},
-        {?datafield_screen_id, screen_id(Record)}
+        {?datafield_meta, {[
+            {?datafield_status, status(Record)},
+            {?datafield_code, code(Record)},
+            {?datafield_slogan, slogan(Record)}
+        ]}}
     ]}}.
 
 
@@ -107,8 +129,11 @@ to_document(Record) ->
 
 validate_map() ->
     {hash, [
-        {?datafield_imdb_id, required, {string}},
-        {?datafield_screen_id, required, {string}}
+        {?datafield_meta, required, {hash, [
+            {?datafield_status, required, {boolean}},
+            {?datafield_code, required, {integer}},
+            {?datafield_slogan, required, {string}}
+        ]}}
     ]}.
 
 
@@ -130,13 +155,9 @@ validate_fun(fix, Stack, Value) ->
 -spec validate_fun_validate(Stack :: jiffy_v:jv_ret_stack(), Value :: jiffy_v:jv_data()) ->
     Ret :: {ok, valid} | {ok, NewValue :: jiffy_v:jv_data()} | {error, Code :: jiffy_v:jv_ret_code()}.
 
-validate_fun_validate([?datafield_imdb_id], Value)
-when byte_size(Value) > 128 ->
-    {error, <<"IMDB ID is too long">>};
-
-validate_fun_validate([?datafield_screen_id], Value)
-when byte_size(Value) > 128 ->
-    {error, <<"Screen ID is too long">>};
+validate_fun_validate([?datafield_meta, ?datafield_slogan], Value)
+when byte_size(Value) > 256 ->
+    {error, <<"Slogan is too long">>};
 
 validate_fun_validate(_Stack, _Value) ->
     {ok, valid}.
@@ -144,12 +165,6 @@ validate_fun_validate(_Stack, _Value) ->
 
 -spec validate_fun_fix(Stack :: jiffy_v:jv_ret_stack(), Value :: jiffy_v:jv_data()) ->
     Ret :: {ok, NewValue :: jiffy_v:jv_data()} | {error, invalid} | {error, Code :: jiffy_v:jv_ret_code()}.
-
-validate_fun_fix([?datafield_imdb_id], _Value) ->
-    {error, <<"Invalid IMDB ID">>};
-
-validate_fun_fix([?datafield_screen_id], _Value) ->
-    {error, <<"Invalid screen ID">>};
 
 validate_fun_fix(_Stack, _Value) ->
     {error, invalid}.

@@ -2,7 +2,7 @@
 -behavior(veon_pdu).
 
 -export([
-    new/2, imdb_id/1, screen_id/1, 
+    new/2, imdb_id/1, screen_id/1,
     imdb_id/2, screen_id/2,
     from_document/1, to_document/1, validate/1
 ]).
@@ -14,15 +14,14 @@
 -type pdu() :: #?MODULE{}.
 -export_type([pdu/0]).
 
--define(datafield_imdb_id, <<"imdbId">>).
--define(datafield_screen_id, <<"screenId">>).
+-include("datafield_definitions.hrl").
 
 
 %% Interface
 
 
 -spec new(
-    ImbdId :: veon_pdu:imdb_id(), 
+    ImbdId :: veon_pdu:imdb_id(),
     ScreenId :: veon_pdu:screen_id()
 ) ->
     pdu().
@@ -67,8 +66,8 @@ screen_id(#?MODULE{} = Record, Value) ->
         ErrorRet :: jiffy_v:jv_ret_errorlist()
     ).
 
-validate(Document) ->   
-    case jiffy_v:validate(validate_map(), Document, fun validate_fun/3) of 
+validate(Document) ->
+    case jiffy_v:validate(validate_map(), Document, fun validate_fun/3) of
         {[], Result} ->
             {ok, Result};
         {Errors, _} ->

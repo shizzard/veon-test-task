@@ -11,11 +11,14 @@ veon_pdu_movie_register_req:from_document(ValidDoc).
 
 Register movie response flow.
 ```erlang
+Success = true.
+Code = veon_pdu:code('ok').
+Slogan = veon_pdu:slogan(Code).
 ImdbId = <<"tt0111161">>.
 AvailableSeats = 100.
 ReservedSeats = 0.
 ScreenId = <<"screen_123456">>.
-Rec = veon_pdu_movie_register_res:new(ImdbId, <<"STUB">>, AvailableSeats, ReservedSeats, ScreenId).
+Rec = veon_pdu_movie_register_res:new(Success, Code, Slogan, ImdbId, <<"STUB">>, AvailableSeats, ReservedSeats, ScreenId).
 {ok, Doc} = veon_pdu_movie_register_res:to_document(Rec).
 {ok, Json} = veon_pdu_movie_register_res:validate(Doc).
 veon_pdu:render_json(Json).
@@ -31,10 +34,13 @@ veon_pdu_movie_reserve_req:from_document(ValidDoc).
 
 Reserve seat response flow.
 ```erlang
+Success = true.
+Code = veon_pdu:code('ok').
+Slogan = veon_pdu:slogan(Code).
 ImdbId = <<"tt0111161">>.
 ReservationId = <<"B0B61833-6867-438B-BE3F-30522086B5A6">>.
 ScreenId = <<"screen_123456">>.
-Rec = veon_pdu_movie_reserve_res:new(ImdbId, <<"STUB">>, ReservationId, ScreenId).
+Rec = veon_pdu_movie_reserve_res:new(Success, Code, Slogan, ImdbId, <<"STUB">>, ReservationId, ScreenId).
 {ok, Doc} = veon_pdu_movie_reserve_res:to_document(Rec).
 {ok, Json} = veon_pdu_movie_reserve_res:validate(Doc).
 veon_pdu:render_json(Json).
@@ -50,12 +56,26 @@ veon_pdu_movie_retrieve_req:from_document(ValidDoc).
 
 Retrieve movie response flow.
 ```erlang
+Success = true.
+Code = veon_pdu:code('ok').
+Slogan = veon_pdu:slogan(Code).
 ImdbId = <<"tt0111161">>.
 AvailableSeats = 100.
 ReservedSeats = 16.
 ScreenId = <<"screen_123456">>.
-Rec = veon_pdu_movie_retrieve_res:new(ImdbId, <<"STUB">>, AvailableSeats, ReservedSeats, ScreenId).
+Rec = veon_pdu_movie_retrieve_res:new(Success, Code, Slogan, ImdbId, <<"STUB">>, AvailableSeats, ReservedSeats, ScreenId).
 {ok, Doc} = veon_pdu_movie_retrieve_res:to_document(Rec).
 {ok, Json} = veon_pdu_movie_retrieve_res:validate(Doc).
+veon_pdu:render_json(Json).
+```
+
+Generic error response flow.
+```erlang
+Success = false.
+Code = veon_pdu:code('not-found').
+Slogan = veon_pdu:slogan(Code).
+Rec = veon_pdu_movie_generic_error:new(Success, Code, Slogan).
+{ok, Doc} = veon_pdu_movie_generic_error:to_document(Rec).
+{ok, Json} = veon_pdu_movie_generic_error:validate(Doc).
 veon_pdu:render_json(Json).
 ```

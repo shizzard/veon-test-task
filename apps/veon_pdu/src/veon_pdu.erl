@@ -1,11 +1,15 @@
 -module(veon_pdu).
 
 -export([parse_json/1, render_json/1]).
+-export([code/1, slogan/1]).
 
 
 %% Types
 
 
+-type meta_status() :: boolean().
+-type meta_code() :: non_neg_integer().
+-type meta_slogan() :: binary().
 -type imdb_id() :: binary().
 -type movie_title() :: binary().
 -type screen_id() :: binary().
@@ -15,7 +19,7 @@
 -type reserved_seats() :: seats_count().
 
 -export_type([
-    imdb_id/0, movie_title/0, reservation_id/0, screen_id/0,
+    meta_status/0, meta_code/0, meta_slogan/0, imdb_id/0, movie_title/0, reservation_id/0, screen_id/0,
     seats_count/0, available_seats/0, reserved_seats/0
 ]).
 
@@ -73,3 +77,33 @@ render_json(Document) ->
         throw:E ->
             {error, E}
     end.
+
+
+-spec code(Alias :: atom()) ->
+    Code :: meta_code().
+
+code('ok') -> 200;
+code('created') -> 201;
+code('bad-request') -> 400;
+code('not-found') -> 404;
+code('method-not-allowed') -> 405;
+code('not-acceptable') -> 406;
+code('internal-server-error') -> 500;
+code('not-implemented') -> 501;
+code('service-unavailable') -> 503;
+code(_) -> error(invalid_error_alias).
+
+
+-spec slogan(Code :: meta_code()) ->
+    Slogan :: meta_slogan().
+
+slogan(200) -> <<"OK">>;
+slogan(201) -> <<"Created">>;
+slogan(400) -> <<"Bad Request">>;
+slogan(404) -> <<"Not Found">>;
+slogan(405) -> <<"Method Not Allowed">>;
+slogan(406) -> <<"Not Acceptable">>;
+slogan(500) -> <<"Internal Server Error">>;
+slogan(501) -> <<"Not Implemented">>;
+slogan(503) -> <<"Service Unavalable">>;
+slogan(_) -> error(invalid_error_code).

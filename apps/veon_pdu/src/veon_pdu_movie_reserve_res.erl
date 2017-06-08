@@ -2,12 +2,15 @@
 -behavior(veon_pdu).
 
 -export([
-    new/4, imdb_id/1, movie_title/1, reservation_id/1, screen_id/1,
-    imdb_id/2, movie_title/2, reservation_id/2, screen_id/2,
+    new/7, status/1, code/1, slogan/1, imdb_id/1, movie_title/1, reservation_id/1, screen_id/1,
+    status/2, code/2, slogan/2, imdb_id/2, movie_title/2, reservation_id/2, screen_id/2,
     from_document/1, to_document/1, validate/1
 ]).
 
 -record(?MODULE, {
+    status :: veon_pdu:meta_status(),
+    code :: veon_pdu:meta_code(),
+    slogan :: veon_pdu:meta_slogan(),
     imdb_id :: veon_pdu:imdb_id(),
     movie_title :: veon_pdu:movie_title(),
     reservation_id :: veon_pdu:reservation_id(),
@@ -16,16 +19,16 @@
 -type pdu() :: #?MODULE{}.
 -export_type([pdu/0]).
 
--define(datafield_imdb_id, <<"imdbId">>).
--define(datafield_movie_title, <<"movieTitle">>).
--define(datafield_reservation_id, <<"reservationId">>).
--define(datafield_screen_id, <<"screenId">>).
+-include("datafield_definitions.hrl").
 
 
 %% Interface
 
 
 -spec new(
+    Status :: veon_pdu:meta_status(),
+    Code :: veon_pdu:meta_code(),
+    Slogan :: veon_pdu:meta_slogan(),
     ImbdId :: veon_pdu:imdb_id(),
     MovieTitle :: veon_pdu:movie_title(),
     ReservationId :: veon_pdu:reservation_id(),
@@ -33,13 +36,58 @@
 ) ->
     pdu().
 
-new(ImbdId, MovieTitle, ReservationId, ScreenId) ->
+new(Status, Code, Slogan, ImbdId, MovieTitle, ReservationId, ScreenId) ->
     #?MODULE{
+        status = Status,
+        code = Code,
+        slogan = Slogan,
         imdb_id = ImbdId,
         movie_title = MovieTitle,
         reservation_id = ReservationId,
         screen_id = ScreenId
     }.
+
+
+-spec status(Record :: pdu()) ->
+    Ret :: veon_pdu:status().
+
+status(#?MODULE{status = Status}) ->
+    Status.
+
+
+-spec status(Record :: pdu(), Value :: veon_pdu:status()) ->
+    Ret :: pdu().
+
+status(#?MODULE{} = Record, Value) ->
+    Record#?MODULE{status = Value}.
+
+
+-spec code(Record :: pdu()) ->
+    Ret :: veon_pdu:code().
+
+code(#?MODULE{code = Code}) ->
+    Code.
+
+
+-spec code(Record :: pdu(), Value :: veon_pdu:code()) ->
+    Ret :: pdu().
+
+code(#?MODULE{} = Record, Value) ->
+    Record#?MODULE{code = Value}.
+
+
+-spec slogan(Record :: pdu()) ->
+    Ret :: veon_pdu:slogan().
+
+slogan(#?MODULE{slogan = Slogan}) ->
+    Slogan.
+
+
+-spec slogan(Record :: pdu(), Value :: veon_pdu:slogan()) ->
+    Ret :: pdu().
+
+slogan(#?MODULE{} = Record, Value) ->
+    Record#?MODULE{slogan = Value}.
 
 
 -spec imdb_id(Record :: pdu()) ->
@@ -120,6 +168,9 @@ validate(Document) ->
 
 from_document(Document) ->
     {ok, new(
+        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_meta, ?datafield_status], Document)),
+        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_meta, ?datafield_code], Document)),
+        veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_meta, ?datafield_slogan], Document)),
         veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_imdb_id], Document)),
         veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_movie_title], Document)),
         veon_helper_jiffy:unpack(veon_helper_jiffy:get([?datafield_reservation_id], Document)),
@@ -134,6 +185,11 @@ from_document(Document) ->
 
 to_document(Record) ->
     {ok, {[
+        {?datafield_meta, {[
+            {?datafield_status, status(Record)},
+            {?datafield_code, code(Record)},
+            {?datafield_slogan, slogan(Record)}
+        ]}},
         {?datafield_imdb_id, imdb_id(Record)},
         {?datafield_movie_title, movie_title(Record)},
         {?datafield_reservation_id, reservation_id(Record)},
@@ -149,6 +205,11 @@ to_document(Record) ->
 
 validate_map() ->
     {hash, [
+        {?datafield_meta, required, {hash, [
+            {?datafield_status, required, {boolean}},
+            {?datafield_code, required, {integer}},
+            {?datafield_slogan, required, {string}}
+        ]}},
         {?datafield_imdb_id, required, {string}},
         {?datafield_movie_title, required, {string}},
         {?datafield_reservation_id, required, {string}},
@@ -173,6 +234,10 @@ validate_fun(fix, Stack, Value) ->
 
 -spec validate_fun_validate(Stack :: jiffy_v:jv_ret_stack(), Value :: jiffy_v:jv_data()) ->
     Ret :: {ok, valid} | {ok, NewValue :: jiffy_v:jv_data()} | {error, Code :: jiffy_v:jv_ret_code()}.
+
+validate_fun_validate([?datafield_meta, ?datafield_slogan], Value)
+when byte_size(Value) > 256 ->
+    {error, <<"Slogan is too long">>};
 
 validate_fun_validate([?datafield_imdb_id], Value)
 when byte_size(Value) > 128 ->
