@@ -8,8 +8,8 @@
 ]).
 
 -record(?MODULE, {
-    imdb_id :: veon_pdu:imdb_id(),
-    screen_id :: veon_pdu:screen_id()
+    imdb_id :: veon_storage:imdb_id(),
+    screen_id :: veon_storage:screen_id()
 }).
 -type pdu() :: #?MODULE{}.
 -export_type([pdu/0]).
@@ -21,8 +21,8 @@
 
 
 -spec new(
-    ImbdId :: veon_pdu:imdb_id(),
-    ScreenId :: veon_pdu:screen_id()
+    ImbdId :: veon_storage:imdb_id(),
+    ScreenId :: veon_storage:screen_id()
 ) ->
     pdu().
 
@@ -33,13 +33,13 @@ new(ImbdId, ScreenId) ->
 
 
 -spec imdb_id(Record :: pdu()) ->
-    Ret :: veon_pdu:imdb_id().
+    Ret :: veon_storage:imdb_id().
 
 imdb_id(#?MODULE{imdb_id = ImdbId}) ->
     ImdbId.
 
 
--spec imdb_id(Record :: pdu(), Value :: veon_pdu:imdb_id()) ->
+-spec imdb_id(Record :: pdu(), Value :: veon_storage:imdb_id()) ->
     Ret :: pdu().
 
 imdb_id(#?MODULE{} = Record, Value) ->
@@ -47,13 +47,13 @@ imdb_id(#?MODULE{} = Record, Value) ->
 
 
 -spec screen_id(Record :: pdu()) ->
-    Ret :: veon_pdu:screen_id().
+    Ret :: veon_storage:screen_id().
 
 screen_id(#?MODULE{screen_id = ScreenId}) ->
     ScreenId.
 
 
--spec screen_id(Record :: pdu(), Value :: veon_pdu:screen_id()) ->
+-spec screen_id(Record :: pdu(), Value :: veon_storage:screen_id()) ->
     Ret :: pdu().
 
 screen_id(#?MODULE{} = Record, Value) ->

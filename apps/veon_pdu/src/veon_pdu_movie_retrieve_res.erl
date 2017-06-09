@@ -11,11 +11,11 @@
     status :: veon_pdu:meta_status(),
     code :: veon_pdu:meta_code(),
     slogan :: veon_pdu:meta_slogan(),
-    imdb_id :: veon_pdu:imdb_id(),
-    movie_title :: veon_pdu:movie_title(),
-    available_seats :: veon_pdu:available_seats(),
-    reserved_seats :: veon_pdu:reserved_seats(),
-    screen_id :: veon_pdu:screen_id()
+    imdb_id :: veon_storage:imdb_id(),
+    movie_title :: veon_storage:movie_title(),
+    available_seats :: veon_storage:available_seats(),
+    reserved_seats :: veon_storage:reserved_seats(),
+    screen_id :: veon_storage:screen_id()
 }).
 -type pdu() :: #?MODULE{}.
 -export_type([pdu/0]).
@@ -30,11 +30,11 @@
     Status :: veon_pdu:meta_status(),
     Code :: veon_pdu:meta_code(),
     Slogan :: veon_pdu:meta_slogan(),
-    ImbdId :: veon_pdu:imdb_id(),
-    MovieTitle :: veon_pdu:movie_title(),
-    AvailableSeats :: veon_pdu:available_seats(),
-    ReservedSeats :: veon_pdu:reserved_seats(),
-    ScreenId :: veon_pdu:screen_id()
+    ImbdId :: veon_storage:imdb_id(),
+    MovieTitle :: veon_storage:movie_title(),
+    AvailableSeats :: veon_storage:available_seats(),
+    ReservedSeats :: veon_storage:reserved_seats(),
+    ScreenId :: veon_storage:screen_id()
 ) ->
     pdu().
 
@@ -52,13 +52,13 @@ new(Status, Code, Slogan, ImbdId, MovieTitle, AvailableSeats, ReservedSeats, Scr
 
 
 -spec status(Record :: pdu()) ->
-    Ret :: veon_pdu:status().
+    Ret :: veon_storage:status().
 
 status(#?MODULE{status = Status}) ->
     Status.
 
 
--spec status(Record :: pdu(), Value :: veon_pdu:status()) ->
+-spec status(Record :: pdu(), Value :: veon_storage:status()) ->
     Ret :: pdu().
 
 status(#?MODULE{} = Record, Value) ->
@@ -66,13 +66,13 @@ status(#?MODULE{} = Record, Value) ->
 
 
 -spec code(Record :: pdu()) ->
-    Ret :: veon_pdu:code().
+    Ret :: veon_storage:code().
 
 code(#?MODULE{code = Code}) ->
     Code.
 
 
--spec code(Record :: pdu(), Value :: veon_pdu:code()) ->
+-spec code(Record :: pdu(), Value :: veon_storage:code()) ->
     Ret :: pdu().
 
 code(#?MODULE{} = Record, Value) ->
@@ -80,13 +80,13 @@ code(#?MODULE{} = Record, Value) ->
 
 
 -spec slogan(Record :: pdu()) ->
-    Ret :: veon_pdu:slogan().
+    Ret :: veon_storage:slogan().
 
 slogan(#?MODULE{slogan = Slogan}) ->
     Slogan.
 
 
--spec slogan(Record :: pdu(), Value :: veon_pdu:slogan()) ->
+-spec slogan(Record :: pdu(), Value :: veon_storage:slogan()) ->
     Ret :: pdu().
 
 slogan(#?MODULE{} = Record, Value) ->
@@ -94,13 +94,13 @@ slogan(#?MODULE{} = Record, Value) ->
 
 
 -spec imdb_id(Record :: pdu()) ->
-    Ret :: veon_pdu:imdb_id().
+    Ret :: veon_storage:imdb_id().
 
 imdb_id(#?MODULE{imdb_id = ImdbId}) ->
     ImdbId.
 
 
--spec imdb_id(Record :: pdu(), Value :: veon_pdu:imdb_id()) ->
+-spec imdb_id(Record :: pdu(), Value :: veon_storage:imdb_id()) ->
     Ret :: pdu().
 
 imdb_id(#?MODULE{} = Record, Value) ->
@@ -108,13 +108,13 @@ imdb_id(#?MODULE{} = Record, Value) ->
 
 
 -spec movie_title(Record :: pdu()) ->
-    Ret :: veon_pdu:movie_title().
+    Ret :: veon_storage:movie_title().
 
 movie_title(#?MODULE{movie_title = MovieTitle}) ->
     MovieTitle.
 
 
--spec movie_title(Record :: pdu(), Value :: veon_pdu:movie_title()) ->
+-spec movie_title(Record :: pdu(), Value :: veon_storage:movie_title()) ->
     Ret :: pdu().
 
 movie_title(#?MODULE{} = Record, Value) ->
@@ -122,13 +122,13 @@ movie_title(#?MODULE{} = Record, Value) ->
 
 
 -spec available_seats(Record :: pdu()) ->
-    Ret :: veon_pdu:available_seats().
+    Ret :: veon_storage:available_seats().
 
 available_seats(#?MODULE{available_seats = AvailableSeats}) ->
     AvailableSeats.
 
 
--spec available_seats(Record :: pdu(), Value :: veon_pdu:available_seats()) ->
+-spec available_seats(Record :: pdu(), Value :: veon_storage:available_seats()) ->
     Ret :: pdu().
 
 available_seats(#?MODULE{} = Record, Value) ->
@@ -136,13 +136,13 @@ available_seats(#?MODULE{} = Record, Value) ->
 
 
 -spec reserved_seats(Record :: pdu()) ->
-    Ret :: veon_pdu:reserved_seats().
+    Ret :: veon_storage:reserved_seats().
 
 reserved_seats(#?MODULE{reserved_seats = ReservedSeats}) ->
     ReservedSeats.
 
 
--spec reserved_seats(Record :: pdu(), Value :: veon_pdu:reserved_seats()) ->
+-spec reserved_seats(Record :: pdu(), Value :: veon_storage:reserved_seats()) ->
     Ret :: pdu().
 
 reserved_seats(#?MODULE{} = Record, Value) ->
@@ -150,13 +150,13 @@ reserved_seats(#?MODULE{} = Record, Value) ->
 
 
 -spec screen_id(Record :: pdu()) ->
-    Ret :: veon_pdu:screen_id().
+    Ret :: veon_storage:screen_id().
 
 screen_id(#?MODULE{screen_id = ScreenId}) ->
     ScreenId.
 
 
--spec screen_id(Record :: pdu(), Value :: veon_pdu:screen_id()) ->
+-spec screen_id(Record :: pdu(), Value :: veon_storage:screen_id()) ->
     Ret :: pdu().
 
 screen_id(#?MODULE{} = Record, Value) ->

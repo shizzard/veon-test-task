@@ -8,9 +8,9 @@
 ]).
 
 -record(?MODULE, {
-    imdb_id :: veon_pdu:imdb_id(),
-    available_seats :: veon_pdu:available_seats(),
-    screen_id :: veon_pdu:screen_id()
+    imdb_id :: veon_storage:imdb_id(),
+    available_seats :: veon_storage:available_seats(),
+    screen_id :: veon_storage:screen_id()
 }).
 -type pdu() :: #?MODULE{}.
 -export_type([pdu/0]).
@@ -22,9 +22,9 @@
 
 
 -spec new(
-    ImbdId :: veon_pdu:imdb_id(),
-    AvailableSeats :: veon_pdu:available_seats(),
-    ScreenId :: veon_pdu:screen_id()
+    ImbdId :: veon_storage:imdb_id(),
+    AvailableSeats :: veon_storage:available_seats(),
+    ScreenId :: veon_storage:screen_id()
 ) ->
     pdu().
 
@@ -35,13 +35,13 @@ new(ImbdId, AvailableSeats, ScreenId) ->
 
 
 -spec imdb_id(Record :: pdu()) ->
-    Ret :: veon_pdu:imdb_id().
+    Ret :: veon_storage:imdb_id().
 
 imdb_id(#?MODULE{imdb_id = ImdbId}) ->
     ImdbId.
 
 
--spec imdb_id(Record :: pdu(), Value :: veon_pdu:imdb_id()) ->
+-spec imdb_id(Record :: pdu(), Value :: veon_storage:imdb_id()) ->
     Ret :: pdu().
 
 imdb_id(#?MODULE{} = Record, Value) ->
@@ -49,13 +49,13 @@ imdb_id(#?MODULE{} = Record, Value) ->
 
 
 -spec available_seats(Record :: pdu()) ->
-    Ret :: veon_pdu:available_seats().
+    Ret :: veon_storage:available_seats().
 
 available_seats(#?MODULE{available_seats = AvailableSeats}) ->
     AvailableSeats.
 
 
--spec available_seats(Record :: pdu(), Value :: veon_pdu:available_seats()) ->
+-spec available_seats(Record :: pdu(), Value :: veon_storage:available_seats()) ->
     Ret :: pdu().
 
 available_seats(#?MODULE{} = Record, Value) ->
@@ -63,13 +63,13 @@ available_seats(#?MODULE{} = Record, Value) ->
 
 
 -spec screen_id(Record :: pdu()) ->
-    Ret :: veon_pdu:screen_id().
+    Ret :: veon_storage:screen_id().
 
 screen_id(#?MODULE{screen_id = ScreenId}) ->
     ScreenId.
 
 
--spec screen_id(Record :: pdu(), Value :: veon_pdu:screen_id()) ->
+-spec screen_id(Record :: pdu(), Value :: veon_storage:screen_id()) ->
     Ret :: pdu().
 
 screen_id(#?MODULE{} = Record, Value) ->

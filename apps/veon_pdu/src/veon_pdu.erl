@@ -10,18 +10,8 @@
 -type meta_status() :: boolean().
 -type meta_code() :: non_neg_integer().
 -type meta_slogan() :: binary().
--type imdb_id() :: binary().
--type movie_title() :: binary().
--type screen_id() :: binary().
--type reservation_id() :: binary().
--type seats_count() :: non_neg_integer().
--type available_seats() :: seats_count().
--type reserved_seats() :: seats_count().
 
--export_type([
-    meta_status/0, meta_code/0, meta_slogan/0, imdb_id/0, movie_title/0, reservation_id/0, screen_id/0,
-    seats_count/0, available_seats/0, reserved_seats/0
-]).
+-export_type([meta_status/0, meta_code/0, meta_slogan/0]).
 
 
 %% Behavior callbacks

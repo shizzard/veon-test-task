@@ -5,4 +5,8 @@
  {<<"jiffy_v">>,
   {git,"https://github.com/shizzard/jiffy-v.git",
        {ref,"1bfbca6b28392ec5af9c69023d90d1098df97604"}},
+  0},
+ {<<"uuid">>,
+  {git,"https://github.com/avtobiff/erlang-uuid.git",
+       {ref,"585c2474afb4a597ae8c8bf6d21e5a9c73f18e0b"}},
   0}].
