@@ -83,7 +83,7 @@ veon_pdu:render_json(Json).
 Internal storage operations flow.
 ```erlang
 M0 = veon_storage:new_movie(<<"imdb_id">>, <<"title">>, 5, <<"screen_id">>).
-R0 = veon_storage:new_reserve(),
+R0 = veon_storage:new_reserve().
 {ok, M1} = veon_storage:add_reserve(M0, R0).
 {ok, M2} = veon_storage:add_reserve(M1, veon_storage:new_reserve()).
 {ok, M3} = veon_storage:add_reserve(M2, veon_storage:new_reserve()).
@@ -96,4 +96,16 @@ veon_storage:reservation_count(M5).
 {ok, M6} = veon_storage:remove_reserve(M5, veon_storage:reservation_id(R0)).
 {ok, M6} = veon_storage:remove_reserve(M5, R0).
 veon_storage:reservation_count(M6).
+```
+
+ETS storage operation flow.
+```erlang
+{ok, S} = veon_storage_ets:new().
+M0 = veon_storage:new_movie(<<"imdb_id">>, <<"title">>, 5, <<"screen_id">>).
+veon_storage_ets:store(S, M0).
+{ok, M0} = veon_storage_ets:lookup(S, veon_storage:imdb_id(M0), veon_storage:screen_id(M0)).
+R0 = veon_storage:new_reserve().
+{ok, M1} = veon_storage:add_reserve(M0, R0).
+veon_storage_ets:store(S, M1).
+{ok, M1} = veon_storage_ets:lookup(S, veon_storage:imdb_id(M0), veon_storage:screen_id(M0)).
 ```

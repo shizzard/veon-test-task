@@ -3,11 +3,37 @@
 -export([
     new_movie/4, new_movie/5,
     imdb_id/1, movie_title/1, available_seats/1, reserved_seats/1, screen_id/1,
-    imdb_id/2, movie_title/2, available_seats/2, reserved_seats/2, screen_id/2, reservation_count/1,
+    imdb_id/2, movie_title/2, available_seats/2, reserved_seats/2, screen_id/2,
+    reservation_count/1, key/2,
     new_reserve/0, new_reserve/1,
     reservation_id/1, reservation_id/2,
     add_reserve/2, remove_reserve/2
 ]).
+
+
+%% Behavior
+
+
+-callback new() ->
+    {ok, Opaque :: term()}.
+
+-callback lookup(
+    Opaque :: term(),
+    ImdbId :: imdb_id(),
+    ScreenId :: screen_id()
+) ->
+    veon_helper_type:generic_return(
+        OkRet :: veon_storage_movie(),
+        ErrorRet :: not_found
+    ).
+
+-callback store(
+    Opaque :: term(),
+    Movie :: veon_storage_movie()
+) ->
+    veon_helper_type:generic_return(
+        ErrorRet :: term()
+    ).
 
 
 %% Types
@@ -76,7 +102,7 @@ new_movie(ImdbId, MovieTitle, AvailableSeats, ScreenId) ->
 
 new_movie(ImdbId, MovieTitle, AvailableSeats, ReservedSeats, ScreenId) ->
     #veon_storage_movie{
-        key = {ImdbId, ScreenId},
+        key = key(ImdbId, ScreenId),
         imdb_id = ImdbId,
         movie_title = MovieTitle,
         available_seats = AvailableSeats,
@@ -96,7 +122,7 @@ imdb_id(#veon_storage_movie{imdb_id = ImdbId}) ->
     Ret :: veon_storage_movie().
 
 imdb_id(#veon_storage_movie{screen_id = ScreenId} = Record, Value) ->
-    Record#veon_storage_movie{key = {Value, ScreenId}, imdb_id = Value}.
+    Record#veon_storage_movie{key = key(Value, ScreenId), imdb_id = Value}.
 
 
 -spec movie_title(Movie :: veon_storage_movie()) ->
@@ -155,7 +181,7 @@ screen_id(#veon_storage_movie{screen_id = ScreenId}) ->
     Ret :: veon_storage_movie().
 
 screen_id(#veon_storage_movie{imdb_id = ImdbId} = Record, Value) ->
-    Record#veon_storage_movie{key = {ImdbId, Value}, screen_id = Value}.
+    Record#veon_storage_movie{key = key(ImdbId, Value), screen_id = Value}.
 
 
 -spec reservation_count(Movie :: veon_storage_movie()) ->
@@ -163,6 +189,13 @@ screen_id(#veon_storage_movie{imdb_id = ImdbId} = Record, Value) ->
 
 reservation_count(Movie) ->
     dict:size(Movie#veon_storage_movie.reserved_seats).
+
+
+-spec key(ImdbId :: imdb_id(), ScreenId :: screen_id()) ->
+    term().
+
+key(ImdbId, ScreenId) ->
+    {ImdbId, ScreenId}.
 
 
 -spec new_reserve() ->
