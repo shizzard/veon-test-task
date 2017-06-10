@@ -2,6 +2,6 @@
     {description, "Veon test task internal storage application"},
     {vsn, "1"},
     {registered, []},
-    {applications, [kernel, stdlib, veon_helper]},
+    {applications, [kernel, stdlib, veon_helper, uuid]},
     {env, []}
 ]}.

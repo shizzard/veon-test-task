@@ -109,3 +109,24 @@ R0 = veon_storage:new_reserve().
 veon_storage_ets:store(S, M1).
 {ok, M1} = veon_storage_ets:lookup(S, veon_storage:imdb_id(M0), veon_storage:screen_id(M0)).
 ```
+
+Internal workers flow.
+```erlang
+ImdbId = <<"tt0111161">>.
+MovieTitle = <<"STUB">>.
+AvailableSeats = 5.
+ScreenId = <<"screen_123456">>.
+WorkerId = veon_shard:worker_by_id(veon_shard:id_for(ImdbId, veon_config:worker_count())).
+{ok, M0} = veon_worker:store_movie(WorkerId, ImdbId, MovieTitle, AvailableSeats, ScreenId).
+{ok, {M1, R0}} = veon_worker:add_reserve(WorkerId, ImdbId, ScreenId).
+{ok, M2} = veon_worker:remove_reserve(WorkerId, ImdbId, ScreenId, veon_storage:reservation_id(R0)).
+{error, not_found} = veon_worker:remove_reserve(WorkerId, ImdbId, ScreenId, veon_storage:reservation_id(R0)).
+{ok, {M3, _}} = veon_worker:add_reserve(WorkerId, ImdbId, ScreenId).
+{ok, {M4, _}} = veon_worker:add_reserve(WorkerId, ImdbId, ScreenId).
+{ok, {M5, _}} = veon_worker:add_reserve(WorkerId, ImdbId, ScreenId).
+{ok, {M6, _}} = veon_worker:add_reserve(WorkerId, ImdbId, ScreenId).
+{ok, {M7, _}} = veon_worker:add_reserve(WorkerId, ImdbId, ScreenId).
+{error, reservations_exceeded} = veon_worker:add_reserve(WorkerId, ImdbId, ScreenId).
+{ok, M7} = veon_worker:lookup_movie(WorkerId, ImdbId, ScreenId).
+{error, not_found} = veon_worker:lookup_movie(WorkerId, ImdbId, <<"fake_screen">>).
+```

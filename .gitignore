@@ -1,4 +1,5 @@
 _build
+log
 apps/*/ebin
 build/core.plt
 erl_crash.dump

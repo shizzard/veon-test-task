@@ -17,3 +17,6 @@ clean:
 
 dialyze:
 	$(REBAR) dialyzer
+
+run-release: release
+	_build/default/rel/veon/bin/veon console

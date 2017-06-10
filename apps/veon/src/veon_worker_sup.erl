@@ -1,4 +1,4 @@
--module(veon_sup).
+-module(veon_worker_sup).
 -behaviour(supervisor).
 
 -include_lib("veon_helper/include/veon_specs_supervisor.hrl").
@@ -20,10 +20,10 @@ start_link() ->
 
 
 init([]) ->
-    {ok, {{one_for_one, 5, 10}, [
+    {ok, {{simple_one_for_one, 5, 10}, [
         {
-            veon_worker_sup, {veon_worker_sup, start_link, []},
-            permanent, 5000, supervisor, [veon_worker_sup]
+            veon_worker, {veon_worker, start_link, []},
+            permanent, 5000, worker, [veon_worker]
         }
     ]}}.
 

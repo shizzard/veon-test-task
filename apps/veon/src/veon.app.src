@@ -2,7 +2,7 @@
     {description, "Veon test task application"},
     {vsn, "1"},
     {registered, []},
-    {applications, [kernel, stdlib, veon_helper, veon_pdu]},
+    {applications, [kernel, stdlib, lager, veon_helper, veon_pdu]},
     {mod, {veon_app, []}},
     {env, []}
 ]}.
