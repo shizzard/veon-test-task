@@ -1,5 +1,6 @@
 _build
 log
 apps/*/ebin
+opt/*.pyc
 build/core.plt
 erl_crash.dump

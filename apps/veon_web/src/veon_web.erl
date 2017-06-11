@@ -114,8 +114,7 @@ generic_error(Req, Alias) ->
     Slogan = veon_pdu:slogan(Code),
     Rec = veon_pdu_movie_generic_error:new(false, Code, Slogan),
     {ok, Document} = veon_pdu_movie_generic_error:to_document(Rec),
-    {ok, Json} = veon_pdu_movie_generic_error:validate(Document),
-    {ok, Body} = veon_pdu:render_json(Json),
+    {ok, Body} = veon_pdu_movie_generic_error:validate(Document),
     reply(Body, Req, Code).
 
 

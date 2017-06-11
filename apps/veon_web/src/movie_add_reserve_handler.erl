@@ -66,6 +66,9 @@ handle_2_reserve(Record, Req, State) ->
     ) of
         {ok, {Movie, Reserve}} ->
             handle_3_generate_response({Movie, Reserve}, Req, State);
+        {error, not_found} ->
+            {ok, Req1} = veon_web:not_found(Req),
+            {ok, Req1, State};
         {error, reservations_exceeded} ->
             %% Responding with conflict just to indicate situation
             {ok, Req1} = veon_web:conflict(Req),
@@ -84,7 +87,7 @@ handle_2_reserve(Record, Req, State) ->
     Ret :: {ok, Req :: cowboy_req:req(), State :: state()}.
 
 handle_3_generate_response({Movie, Reserve}, Req, State) ->
-    Code = veon_pdu:code('ok'),
+    Code = veon_pdu:code('created'),
     Slogan = veon_pdu:slogan(Code),
     Response = veon_pdu_movie_reserve_res:new(
         true, Code, Slogan,
@@ -123,6 +126,5 @@ handle_4_validate_response(Record, Req, State) ->
     Ret :: {ok, Req :: cowboy_req:req(), State :: state()}.
 
 handle_5_reply(Document, Req, State) ->
-    {ok, Body} = veon_pdu:render_json(Document),
-    {ok, Req1} = veon_web:created(Body, Req),
+    {ok, Req1} = veon_web:created(Document, Req),
     {ok, Req1, State}.

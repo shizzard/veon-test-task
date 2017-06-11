@@ -117,6 +117,5 @@ handle_4_validate_response(Record, Req, State) ->
     Ret :: {ok, Req :: cowboy_req:req(), State :: state()}.
 
 handle_5_reply(Document, Req, State) ->
-    {ok, Body} = veon_pdu:render_json(Document),
-    {ok, Req1} = veon_web:created(Body, Req),
+    {ok, Req1} = veon_web:created(Document, Req),
     {ok, Req1, State}.
