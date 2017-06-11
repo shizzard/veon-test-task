@@ -92,7 +92,7 @@ add_reserve(Worker, ImdbId, ScreenId) ->
     ReservationId :: veon_storage:reservation_id()
 ) ->
     veon_helper_type:generic_return(
-        OkRet :: {veon_storage:veon_storage_movie()},
+        OkRet :: veon_storage:veon_storage_movie(),
         ErrorRet :: not_found | atom()
     ).
 

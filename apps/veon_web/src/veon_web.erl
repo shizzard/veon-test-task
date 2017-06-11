@@ -1,8 +1,10 @@
 -module(veon_web).
 
 -export([
-    do_generic_checks/1, ok/2, created/2,
-    bad_request/1, not_found/1, method_not_allowed/1, conflict/1, internal_server_error/1
+    do_generic_checks/1,
+    ok/2, created/2,
+    bad_request/1, not_found/1, method_not_allowed/1, conflict/1,
+    internal_server_error/1, not_implemented/1
 ]).
 
 
@@ -86,6 +88,17 @@ conflict(Req) ->
 
 internal_server_error(Req) ->
     generic_error(Req, 'internal-server-error').
+
+
+-spec not_implemented(
+    Req :: cowboy_req:req()
+) ->
+    veon_helper_type:ok_return(
+        OkRet :: cowboy_req:req()
+    ).
+
+not_implemented(Req) ->
+    generic_error(Req, 'not-implemented').
 
 
 -spec generic_error(
