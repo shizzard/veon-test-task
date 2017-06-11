@@ -1,6 +1,6 @@
 -module(veon_shard).
 
--export([id_for/2, worker_by_id/1]).
+-export([id_for/1, worker_by_id/1]).
 
 -type shard_id() :: non_neg_integer().
 -type worker_id() :: atom() | pid().
@@ -9,14 +9,14 @@
 %% Interface
 
 
--spec id_for(In :: term(), ShardsCount :: non_neg_integer()) ->
+-spec id_for(In :: term()) ->
     Ret :: shard_id().
 
-id_for(Binary, ShardsCount) when is_binary(Binary) ->
-    erlang:crc32(Binary) rem ShardsCount;
+id_for(Binary) when is_binary(Binary) ->
+    erlang:crc32(Binary) rem veon_config:worker_count();
 
-id_for(Term, ShardsCount) ->
-    id_for(erlang:term_to_binary(Term), ShardsCount).
+id_for(Term) ->
+    id_for(erlang:term_to_binary(Term)).
 
 
 -spec worker_by_id(Id :: shard_id()) ->

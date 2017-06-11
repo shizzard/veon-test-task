@@ -78,7 +78,7 @@ lookup_movie(Worker, ImdbId, ScreenId) ->
 ) ->
     veon_helper_type:generic_return(
         OkRet :: {veon_storage:veon_storage_movie(), veon_storage:veon_storage_reserve()},
-        ErrorRet :: not_found | atom()
+        ErrorRet :: not_found | reservations_exceeded | atom()
     ).
 
 add_reserve(Worker, ImdbId, ScreenId) ->

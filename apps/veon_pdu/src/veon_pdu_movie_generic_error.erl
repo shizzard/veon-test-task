@@ -37,13 +37,13 @@ new(Status, Code, Slogan) ->
 
 
 -spec status(Record :: pdu()) ->
-    Ret :: veon_pdu:status().
+    Ret :: veon_pdu:meta_status().
 
 status(#?MODULE{status = Status}) ->
     Status.
 
 
--spec status(Record :: pdu(), Value :: veon_pdu:status()) ->
+-spec status(Record :: pdu(), Value :: veon_pdu:meta_status()) ->
     Ret :: pdu().
 
 status(#?MODULE{} = Record, Value) ->
@@ -51,13 +51,13 @@ status(#?MODULE{} = Record, Value) ->
 
 
 -spec code(Record :: pdu()) ->
-    Ret :: veon_pdu:code().
+    Ret :: veon_pdu:meta_code().
 
 code(#?MODULE{code = Code}) ->
     Code.
 
 
--spec code(Record :: pdu(), Value :: veon_pdu:code()) ->
+-spec code(Record :: pdu(), Value :: veon_pdu:meta_code()) ->
     Ret :: pdu().
 
 code(#?MODULE{} = Record, Value) ->
@@ -65,13 +65,13 @@ code(#?MODULE{} = Record, Value) ->
 
 
 -spec slogan(Record :: pdu()) ->
-    Ret :: veon_pdu:slogan().
+    Ret :: veon_pdu:meta_slogan().
 
 slogan(#?MODULE{slogan = Slogan}) ->
     Slogan.
 
 
--spec slogan(Record :: pdu(), Value :: veon_pdu:slogan()) ->
+-spec slogan(Record :: pdu(), Value :: veon_pdu:meta_slogan()) ->
     Ret :: pdu().
 
 slogan(#?MODULE{} = Record, Value) ->

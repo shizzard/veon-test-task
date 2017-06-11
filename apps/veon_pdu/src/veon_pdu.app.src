@@ -2,6 +2,6 @@
     {description, "Veon test task application PDUs"},
     {vsn, "1"},
     {registered, []},
-    {applications, [kernel, stdlib, veon_helper]},
+    {applications, [kernel, stdlib, veon_helper, jiffy, jiffy_v]},
     {env, []}
 ]}.

@@ -1,0 +1,8 @@
+{application, veon_web, [
+    {description, "Veon test task web-interface application"},
+    {vsn, "1"},
+    {registered, []},
+    {applications, [kernel, stdlib, cowboy, veon_helper, veon_pdu, veon_storage, veon]},
+    {mod, {veon_web_app, []}},
+    {env, []}
+]}.
